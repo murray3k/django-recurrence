@@ -834,9 +834,9 @@ def serialize(rule_or_recurrence):
     def serialize_dt(dt):
         if not dt.tzinfo:
             dt = localtz().localize(dt)
-        dt = dt.astimezone(pytz.utc)
+        #dt = dt.astimezone(pytz.utc)
 
-        return u'%s%s%sT%s%s%sZ' % (
+        return u'%s%s%sT%s%s%s' % (
             str(dt.year).rjust(4, '0'),
             str(dt.month).rjust(2, '0'),
             str(dt.day).rjust(2, '0'),
@@ -917,15 +917,15 @@ def serialize(rule_or_recurrence):
 
     for rdate in obj.rdates:
         if rdate.tzinfo:
-            rdate = rdate.astimezone(pytz.utc)
+            rdate = rdate.astimezone(localtz())
         else:
-            rdate = localtz().localize(rdate).astimezone(pytz.utc)
+            rdate = localtz().localize(rdate)  #.astimezone(pytz.utc)
         items.append((u'RDATE', serialize_dt(rdate)))
     for exdate in obj.exdates:
         if exdate.tzinfo:
-            exdate = exdate.astimezone(pytz.utc)
+            exdate = exdate.astimezone(localtz())
         else:
-            exdate = localtz().localize(exdate).astimezone(pytz.utc)
+            exdate = localtz().localize(exdate)  #.astimezone(pytz.utc)
         items.append((u'EXDATE', serialize_dt(exdate)))
 
     return u'\n'.join(u'%s:%s' % i for i in items)
